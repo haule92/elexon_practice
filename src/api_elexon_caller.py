@@ -17,9 +17,13 @@ class ElexonCaller(Credentials):
         return f'https://api.bmreports.com/BMRS/{report_code}/' \
                f'v1?APIKey={api_key}&SettlementDate={settlement_date}&Period={period}&ServiceType=xml'
 
+    def fetch_response(self, report_code, period=1):
+        response = requests.get(url=self.build_url(report_code, self.api_key, self.settlement_date, period))
+        return response
+
     @make_it_daily
     def parsed_response(self, report_code, period):
-        response = requests.get(url=self.build_url(report_code, self.api_key, self.settlement_date, period))
+        response = self.fetch_response(report_code, period)
         df = pd.read_xml(response.text, xpath='.//item')
         return df
 
