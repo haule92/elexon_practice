@@ -1,8 +1,6 @@
 import pandas as pd
-
-float_cols = ['imbalancePriceAmountGBP', 'imbalanceQuantityMAW']
-int_cols = ['settlementPeriod']
-dt_cols = ['settlementDate']
+from tqdm import tqdm
+from src.helper import float_cols, int_cols, dt_cols
 
 
 def convert_dtypes(func):
@@ -39,7 +37,7 @@ def make_it_daily(func):
     def inner(*args):
 
         dfs = []
-        for period in range(1, 49):
+        for period in tqdm(range(1, 49)):
             df = func(*args, period)
             df.reset_index(drop=True, inplace=True)
             dfs.append(df)
@@ -50,7 +48,12 @@ def make_it_daily(func):
     return inner
 
 
-def adding_minutes_to_df(df: pd.DataFrame):
+def format_readable(func):
 
-    print(0)
+    def inner(*args):
+        number = func(*args)
+        if type(number) is list:
+            return "{:,}".format(round(number[0], 2)), "{:,}".format(round(number[1], 2))
+        return "{:,}".format(round(number, 2))
+    return inner
 
