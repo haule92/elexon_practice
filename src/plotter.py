@@ -2,6 +2,8 @@ import plotly.express as px
 
 
 class Plotter:
+    """Class where all the plotting methods are store inside.
+    The library used to plot is plotly."""
 
     @staticmethod
     def plot_imbalance_prices(df):
